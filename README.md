@@ -90,3 +90,55 @@ sudo apt install build-essential zlib1g-dev pkg-config libglib2.0-dev binutils-d
 ## Lab1 Xv6 and Unix utilities
 
 参考 https://pdos.csail.mit.edu/6.828/2019/labs/util.html
+
+### Sleep
+
+根据提示，我们需要去使用一个叫sleep的系统调用。
+
+那我们首先看一下其他的user目录下的程序是如何使用系统调用的：
+
+打开[`user/echo.c`](https://github.com/black-desk/xv6-riscv-fall19/blob/c0beeccb1b46cfba7762740b901ca266adb65a6f/user/echo.c),可以看到其引用了三个头文件，以及下面引用了一个名为write的函数，看起来像是个系统调用。
+
+可以在[`user/user.h`](https://github.com/black-desk/xv6-riscv-fall19/blob/64b93d175ac6eb739036b394fbb0766fbf06f5b7/user/user.h)中找到这个函数，也可以看到这里有一大堆系统调用的声明。
+
+根据提示不难发现这些系统调用的实现在[`user/usys.S`](https://github.com/black-desk/xv6-riscv-fall19/blob/util/user/usys.S)中，可以看出形如SYS_sleep的宏是系统调用号。可以在[`kernel/syscall.h`](https://github.com/black-desk/xv6-riscv-fall19/blob/87696bad0d7c92cf573e7fd5eb9a8178ba686c4e/kernel/syscall.h)中找到它们的具体数值。
+
+根据提示我们可以发现这些系统调用通过[`kernel/syscall.c`](https://github.com/black-desk/xv6-riscv-fall19/blob/f6ec8d09bcef5c303cc55014eff359ae07ac417f/kernel/syscall.c) 最终运行了位于文件[`kernel/sysproc.c`](https://github.com/black-desk/xv6-riscv-fall19/blob/67702cf706bce7adef472f0caa48d81ddfaeb33a/kernel/sysproc.c)中的相关代码。
+
+这些函数的相关使用我们可以参考linux的man手册中的说明，行为基本是一致的。
+
+参考其他的user程序简单写完sleep之后，我们将sleep添加到[`Makefile`的120行](https://github.com/black-desk/xv6-riscv-fall19/blob/b79af849131e667f6a2466f765804c055dd93048/Makefile#L120)处的UPROGS中，然后编译运行即可看到效果。
+
+### Uptime
+
+与sleep类似实现uptime即可。有相应的系统调用。
+
+### Pingpong
+
+这里要求我们创建一个程序，父进程通过管道向子进程写消息“ping”，子进程收到后向父进程发消息“pong”。
+
+提示告诉我们可以使用pipe系统调用创建一个管道，然后使用fork系统调用创建一个子进程，使用read系统调用从管道中读，使用write系统调用向管道中写。同时可以使用getid（）来获取程序的pid。
+
+我们可以在[`kernel/proc.c`的272行](https://github.com/black-desk/xv6-riscv-fall19/blob/23ecf5bb68de26059addd4499ae384ca6eee0c1a/kernel/proc.c#L272)处看到，子进程的fork（）的结果是0
+
+这里要注意的是如果[27行处](https://github.com/black-desk/xv6-riscv-fall19/blob/b79af849131e667f6a2466f765804c055dd93048/user/pingpong.c#L27)不加sleep(1)，子进程可能会来不及写pong。
+
+### Primes
+
+这里要求我们根据https://swtch.com/~rsc/thread/创建一个找质数的程序。
+
+大体的思路如下：
+
+```
+p = get a number from left neighbor
+print p
+loop:
+    n = get a number from left neighbor
+    if (p does not divide n)
+        send n to right neighbor
+```
+
+![算法示意图](https://swtch.com/~rsc/thread/sieve.gif)
+
+需要注意的地方在lab的说明中已经很详细了。
+

@@ -3,7 +3,7 @@
 	url = https://github.com/riscv/riscv-gnu-toolchain
 [submodule "xv6-riscv-fall19"]
 	path = xv6-riscv-fall19
-	url = https://github.com/mit-pdos/xv6-riscv-fall19.git
+	url = https://github.com/black-desk/xv6-riscv-fall19.git
 [submodule "qemu"]
 	path = qemu
 	url = https://github.com/qemu/qemu.git

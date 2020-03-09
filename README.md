@@ -93,6 +93,8 @@ sudo apt install build-essential zlib1g-dev pkg-config libglib2.0-dev binutils-d
 
 ### Sleep
 
+[sleep.c](https://github.com/black-desk/xv6-riscv-fall19/blob/b79af849131e667f6a2466f765804c055dd93048/user/sleep.c)
+
 根据提示，我们需要去使用一个叫sleep的系统调用。
 
 那我们首先看一下其他的user目录下的程序是如何使用系统调用的：
@@ -111,9 +113,13 @@ sudo apt install build-essential zlib1g-dev pkg-config libglib2.0-dev binutils-d
 
 ### Uptime
 
+[uptime.c](https://github.com/black-desk/xv6-riscv-fall19/blob/b79af849131e667f6a2466f765804c055dd93048/user/uptime.c)
+
 与sleep类似实现uptime即可。有相应的系统调用。
 
 ### Pingpong
+
+[pingpong.c](https://github.com/black-desk/xv6-riscv-fall19/blob/b79af849131e667f6a2466f765804c055dd93048/user/pingpong.c)
 
 这里要求我们创建一个程序，父进程通过管道向子进程写消息“ping”，子进程收到后向父进程发消息“pong”。
 
@@ -124,6 +130,8 @@ sudo apt install build-essential zlib1g-dev pkg-config libglib2.0-dev binutils-d
 这里要注意的是如果[27行处](https://github.com/black-desk/xv6-riscv-fall19/blob/b79af849131e667f6a2466f765804c055dd93048/user/pingpong.c#L27)不加sleep(1)，子进程可能会来不及写pong。
 
 ### Primes
+
+[primes.c](https://github.com/black-desk/xv6-riscv-fall19/blob/b79af849131e667f6a2466f765804c055dd93048/user/primes.c)
 
 这里要求我们根据https://swtch.com/~rsc/thread/创建一个找质数的程序。
 
@@ -142,3 +150,20 @@ loop:
 
 需要注意的地方在lab的说明中已经很详细了。
 
+### Find
+
+[find.c](https://github.com/black-desk/xv6-riscv-fall19/blob/util/../../../../../../../../../home/black_desk/WorkSpace/Projects/Doing/mit-6.828-2019fall/xv6-riscv-fall19/user/find.c)
+
+复制[ls.c](https://github.com/black-desk/xv6-riscv-fall19/blob/64b93d175ac6eb739036b394fbb0766fbf06f5b7/user/ls.c)的代码来魔改即可.
+
+提示告诉我们在[grep.c](https://github.com/black-desk/xv6-riscv-fall19/blob/fc337af2b6275d8b0b8bc41b5e2eb3619eb47bf1/user/grep.c)里面有正则相关的代码,也复制过来用就行了.
+
+这里有个坑:
+
+回忆之前的Primes中的情况,求质数的过程中会停下来是因为这个系统对同时打开的文件数量有限制.
+
+>  Since xv6 has limited number of file descriptors and processes, the first process can stop at 35.
+
+所以这里如果我们写find的时候open了一个文件而没有close,会导致之后的文件无法打开.
+
+要注意及时关闭文件.

@@ -152,7 +152,7 @@ loop:
 
 ### Find
 
-[find.c](https://github.com/black-desk/xv6-riscv-fall19/blob/util/../../../../../../../../../home/black_desk/WorkSpace/Projects/Doing/mit-6.828-2019fall/xv6-riscv-fall19/user/find.c)
+[find.c](https://github.com/black-desk/xv6-riscv-fall19/blob/31bed5a737aebcf99e251f8419292ff575aa85cf/user/find.c)
 
 复制[ls.c](https://github.com/black-desk/xv6-riscv-fall19/blob/64b93d175ac6eb739036b394fbb0766fbf06f5b7/user/ls.c)的代码来魔改即可.
 
@@ -167,3 +167,11 @@ loop:
 所以这里如果我们写find的时候open了一个文件而没有close,会导致之后的文件无法打开.
 
 要注意及时关闭文件.
+
+### Xargs
+
+[xargs.c](https://github.com/black-desk/xv6-riscv-fall19/blob/util/user/xargs.c)
+
+需要从一个程序中执行另一个程序, 我们会想到 exec() 系统调用, 但是由于一个程序执行了 exec() 之后, 会被所调用的那个程序代替, 所以我们不能直接运行 exec() 这个函数, 根据提示, 我们需要先 fork() 之后用子进程去 exec().
+
+提示中写的还算清楚, 只需要控制一下读到回车再执行程序就行了.
